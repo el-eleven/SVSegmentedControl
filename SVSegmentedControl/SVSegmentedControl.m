@@ -19,8 +19,10 @@
 @property (nonatomic, assign) SVSegmentedControl *segmentedControl;
 @property (nonatomic, assign) UIFont *font;
 
-@property (nonatomic, readonly) UILabel *label;
-@property (nonatomic, readonly) UILabel *secondLabel;
+@property (nonatomic, assign) SVSegmentedItem *controlItem;
+@property (nonatomic, readwrite) CGFloat controlAlpha;
+@property (nonatomic, assign) SVSegmentedItem *secondControlItem;
+@property (nonatomic, readwrite) CGFloat secondControlAlpha;
 
 - (void)activate;
 - (void)deactivate;
@@ -79,6 +81,27 @@
     [super dealloc];
 }
 
+- (void)initShared {
+    self.thumbRects = [NSMutableArray arrayWithCapacity:[self.itemsArray count]];
+    
+    self.backgroundColor = [UIColor clearColor];
+    self.clipsToBounds = YES;
+    self.userInteractionEnabled = YES;
+    self.animateToInitialSelection = NO;
+    self.clipsToBounds = NO;
+    
+    self.font = [UIFont boldSystemFontOfSize:15];
+    self.textColor = [UIColor grayColor];
+    self.shadowColor = [UIColor blackColor];
+    self.shadowOffset = CGSizeMake(0, -1);
+    
+    self.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
+    self.thumbEdgeInset = UIEdgeInsetsMake(2, 2, 3, 2);
+    self.height = 32.0;
+    
+    self.selectedIndex = 0;
+    self.thumb.segmentedControl = self;
+}
 
 - (id)initWithSectionTitles:(NSArray*)array {
     
@@ -88,28 +111,24 @@
             SVSegmentedItem *item = [[[SVSegmentedItem alloc] initWithTitle:title] autorelease];
             [self.itemsArray addObject:item];
         }
-        self.thumbRects = [NSMutableArray arrayWithCapacity:[array count]];
-        
-        self.backgroundColor = [UIColor clearColor];
-        self.clipsToBounds = YES;
-        self.userInteractionEnabled = YES;
-        self.animateToInitialSelection = NO;
-        self.clipsToBounds = NO;
-        
-        self.font = [UIFont boldSystemFontOfSize:15];
-        self.textColor = [UIColor grayColor];
-        self.shadowColor = [UIColor blackColor];
-        self.shadowOffset = CGSizeMake(0, -1);
-        
-        self.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
-        self.thumbEdgeInset = UIEdgeInsetsMake(2, 2, 3, 2);
-        self.height = 32.0;
-        
-        self.selectedIndex = 0;
-        self.thumb.segmentedControl = self;
+        [self initShared];
     }
     
 	return self;
+}
+
+- (SVSegmentedControl*)initWithSectionImages:(NSArray*)array
+{
+    if (self = [super initWithFrame:CGRectZero]) {
+        self.itemsArray = [NSMutableArray arrayWithCapacity:[array count]];
+        for (UIImage *image in array) {
+            SVSegmentedItem *item = [[[SVSegmentedItem alloc] initWithImage:image] autorelease];
+            [self.itemsArray addObject:item];
+        }
+        [self initShared];
+    }
+    
+    return self;
 }
 
 - (SVSegmentedThumb *)thumb {
@@ -149,7 +168,7 @@
 	self.thumb.frame = [[self.thumbRects objectAtIndex:0] CGRectValue];
 	self.thumb.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.thumb.bounds cornerRadius:2].CGPath;
 	SVSegmentedItem *firstItem = [self.itemsArray objectAtIndex:0];
-    self.thumb.label.text = firstItem.title;
+    self.thumb.controlItem = firstItem;
 	self.thumb.font = self.font;
 	
 	[self insertSubview:self.thumb atIndex:0];
@@ -207,9 +226,8 @@
 	int i = 0;
 	
 	for(SVSegmentedItem *item in self.itemsArray) {
-        CGRect labelRect = CGRectMake((self.segmentWidth*i), posY, self.segmentWidth, self.font.pointSize);
-        //CGContextFillRect(context, labelRect);
-		[item drawInRect:labelRect withFont:self.font lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
+        CGPoint contentPoint = CGPointMake(self.segmentWidth * i, posY);
+		[item drawAtPoint:contentPoint withWidth:self.segmentWidth font:self.font];
 		i++;
 	}
 }
@@ -312,7 +330,7 @@
 	[self.thumb deactivate];
     
     if(self.crossFadeLabelsOnDrag)
-        self.thumb.secondLabel.alpha = 0;
+        self.thumb.secondControlAlpha = 0;
 
 	int index;
 	
@@ -322,7 +340,7 @@
 		index = floor(self.thumb.center.x/self.segmentWidth);
 	
     SVSegmentedItem *item = [self.itemsArray objectAtIndex:index];
-	self.thumb.label.text = item.title;
+	self.thumb.controlItem = item;
 
 	if(animated)
 		[self moveThumbToIndex:index animate:YES];
@@ -337,25 +355,25 @@
 	
 	if (secondTitleOnLeft && hoverIndex > 0) {
         SVSegmentedItem *previousItem = [self.itemsArray objectAtIndex:hoverIndex - 1];
-		self.thumb.label.alpha = 0.5 + ((self.thumb.center.x / self.segmentWidth) - hoverIndex);
-		self.thumb.secondLabel.text = previousItem.title;
-		self.thumb.secondLabel.alpha = 0.5 - ((self.thumb.center.x / self.segmentWidth) - hoverIndex);
+		self.thumb.controlAlpha = 0.5 + ((self.thumb.center.x / self.segmentWidth) - hoverIndex);
+		self.thumb.secondControlItem = previousItem;
+		self.thumb.secondControlAlpha = 0.5 - ((self.thumb.center.x / self.segmentWidth) - hoverIndex);
 	}
 	
     else if (hoverIndex + 1 < self.itemsArray.count) {
         SVSegmentedItem *followingItem = [self.itemsArray objectAtIndex:hoverIndex + 1];
-		self.thumb.label.alpha = 0.5 + (1 - ((self.thumb.center.x / self.segmentWidth) - hoverIndex));
-		self.thumb.secondLabel.text = followingItem.title;
-		self.thumb.secondLabel.alpha = ((self.thumb.center.x / self.segmentWidth) - hoverIndex) - 0.5;
+		self.thumb.controlAlpha = 0.5 + (1 - ((self.thumb.center.x / self.segmentWidth) - hoverIndex));
+		self.thumb.secondControlItem = followingItem;
+		self.thumb.secondControlAlpha = ((self.thumb.center.x / self.segmentWidth) - hoverIndex) - 0.5;
 	}
 	
     else {
-		self.thumb.secondLabel.text = nil;
-		self.thumb.label.alpha = 1.0;
+		self.thumb.secondControlItem = nil;
+		self.thumb.controlAlpha = 1.0;
 	}
 
     SVSegmentedItem *item = [self.itemsArray objectAtIndex:hoverIndex];
-	self.thumb.label.text = item.title;
+	self.thumb.controlItem = item;
 }
 
 - (void)activate {
@@ -363,7 +381,7 @@
 	self.trackingThumb = self.moved = NO;
 	
     SVSegmentedItem *selectedItem = [self.itemsArray objectAtIndex:self.selectedIndex];
-	self.thumb.label.text = selectedItem.title;
+	self.thumb.controlItem = selectedItem;
     	
 	if(self.selectedSegmentChangedHandler)
 		self.selectedSegmentChangedHandler(self);

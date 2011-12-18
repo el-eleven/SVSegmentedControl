@@ -11,6 +11,7 @@
 #import "SVSegmentedThumb.h"
 #import <QuartzCore/QuartzCore.h>
 #import "SVSegmentedControl.h"
+#import "SVSegmentedItem.h"
 
 @interface SVSegmentedThumb ()
 
@@ -18,8 +19,15 @@
 @property (nonatomic, assign) SVSegmentedControl *segmentedControl;
 @property (nonatomic, assign) UIFont *font;
 
+@property (nonatomic, assign) SVSegmentedItem *controlItem;
+@property (nonatomic, readwrite) CGFloat controlAlpha;
+@property (nonatomic, assign) SVSegmentedItem *secondControlItem;
+@property (nonatomic, readwrite) CGFloat secondControlAlpha;
+
 @property (nonatomic, readonly) UILabel *label;
 @property (nonatomic, readonly) UILabel *secondLabel;
+@property (nonatomic, readonly) UIImageView *imageView;
+@property (nonatomic, readonly) UIImageView *secondImageView;
 
 - (void)activate;
 - (void)deactivate;
@@ -30,7 +38,8 @@
 @implementation SVSegmentedThumb
 
 @synthesize segmentedControl, backgroundImage, highlightedBackgroundImage, castsShadow, font, tintColor, textColor, shadowColor, shadowOffset, selected;
-@synthesize label, secondLabel;
+@synthesize controlItem, controlAlpha, secondControlItem, secondControlAlpha;
+@synthesize label, secondLabel, imageView, secondImageView;
 
 - (void)dealloc {
     
@@ -39,6 +48,8 @@
     
     [label release];
     [secondLabel release];
+    [imageView release];
+    [secondImageView release];
 	
     [super dealloc];
 }
@@ -64,6 +75,62 @@
     }
 	
     return self;
+}
+
+- (SVSegmentedItem *)controlItem
+{
+    SVSegmentedItem *item = nil;
+    if (nil != label.text) {
+        item = [[[SVSegmentedItem alloc] initWithTitle:label.text] autorelease];
+    }
+    else if (nil != imageView.image) {
+        item = [[[SVSegmentedItem alloc] initWithImage:imageView.image] autorelease];
+    }
+    return item;
+}
+
+- (void)setControlItem:(SVSegmentedItem *)item
+{
+    NSAssert(nil == item.title || nil == item.image, @"Current version supports either only title or image.");
+    label.text = item.title;
+    imageView.image = item.image;
+}
+
+- (CGFloat)controlAlpha {
+    return label.alpha;
+}
+
+- (void)setControlAlpha:(CGFloat)alpha {
+    label.alpha = alpha;
+    imageView.alpha = alpha;
+}
+
+- (SVSegmentedItem *)secondControlItem
+{
+    SVSegmentedItem *item = nil; 
+    if (nil != secondLabel.text) {
+        item = [[[SVSegmentedItem alloc] initWithTitle:secondLabel.text] autorelease];
+    }
+    else if (nil != secondImageView.image) {
+        item = [[[SVSegmentedItem alloc] initWithImage:secondImageView.image] autorelease];
+    }
+    return item;
+}
+
+- (void)setSecondControlItem:(SVSegmentedItem *)item
+{
+    NSAssert(nil == item.title || nil == item.image, @"Current version supports either only title or image.");
+    secondLabel.text = item.title;
+    secondImageView.image = item.image;
+}
+
+- (CGFloat)secondControlAlpha {
+    return secondLabel.alpha;
+}
+
+- (void)setSecondControlAlpha:(CGFloat)alpha {
+    secondLabel.alpha = alpha;
+    secondImageView.alpha = alpha;
 }
 
 - (UILabel*)label {
@@ -96,6 +163,31 @@
     return self.label.font;
 }
 
+- (UIImageView *)imageView
+{
+    if (imageView == nil) {
+        imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        imageView.contentMode = UIViewContentModeCenter;
+        imageView.backgroundColor = [UIColor clearColor];
+        imageView.opaque = NO;
+        [self addSubview:imageView];
+    }
+    
+    return imageView;
+}
+
+- (UIImageView *)secondImageView
+{
+    if (secondImageView == nil) {
+        secondImageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        secondImageView.contentMode = UIViewContentModeCenter;
+        secondImageView.backgroundColor = [UIColor clearColor];
+        secondImageView.opaque = NO;
+        [self addSubview:secondImageView];
+    }
+    
+    return secondImageView;
+}
 
 - (void)drawRect:(CGRect)rect {
         
@@ -218,6 +310,7 @@
 		posY--;
     
 	self.label.frame = self.secondLabel.frame = CGRectMake(0, posY, newFrame.size.width, self.font.pointSize);
+    self.imageView.frame = self.bounds;
 }
 
 
@@ -241,15 +334,17 @@
 - (void)activate {
 	[self setSelected:NO];
     
-    if(!self.segmentedControl.crossFadeLabelsOnDrag)
-        self.label.alpha = 1;
+    if(!self.segmentedControl.crossFadeLabelsOnDrag) {
+        self.controlAlpha = 1;
+    }
 }
 
 - (void)deactivate {
 	[self setSelected:YES];
     
-    if(!self.segmentedControl.crossFadeLabelsOnDrag)
-        self.label.alpha = 0;
+    if(!self.segmentedControl.crossFadeLabelsOnDrag) {
+        self.controlAlpha = 0;
+    }
 }
 
 

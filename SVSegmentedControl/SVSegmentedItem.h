@@ -11,12 +11,11 @@
 @interface SVSegmentedItem : NSObject
 
 @property (nonatomic, retain) NSString *title;
+@property (nonatomic, retain) UIImage *image;
 
 - (id)initWithTitle:(NSString *)titleText;
+- (id)initWithImage:(UIImage *)iconImage;
 - (CGSize)sizeWithFont:(UIFont *)font;
-- (void)drawInRect:(CGRect)rect
-          withFont:(UIFont *)font
-     lineBreakMode:(UILineBreakMode)lineBreakMode
-         alignment:(UITextAlignment)alignment;
+- (void)drawAtPoint:(CGPoint)point withWidth:(CGFloat)width font:(UIFont *)font;
 
 @end

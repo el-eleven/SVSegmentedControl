@@ -10,7 +10,7 @@
 
 @implementation SVSegmentedItem
 
-@synthesize title;
+@synthesize title, image;
 
 - (id)initWithTitle:(NSString *)titleText {
     self = [super init];
@@ -20,21 +20,43 @@
     return self;
 }
 
+- (id)initWithImage:(UIImage *)iconImage {
+    self = [super init];
+    if (self) {
+        self.image = iconImage;
+    }
+    return self;
+}
+
 - (void)dealloc {
     self.title = nil;
+    self.image = nil;
     [super dealloc];
 }
 
 - (CGSize)sizeWithFont:(UIFont *)font
 {
-    return [self.title sizeWithFont:font];
+    NSAssert(nil == self.title || nil == self.image, @"Current version supports either only title or image.");
+
+    if (nil != self.title) {
+        return [self.title sizeWithFont:font];
+    }
+    else {
+        return self.image.size;
+    }
 }
 
-- (void)drawInRect:(CGRect)rect
-          withFont:(UIFont *)font
-     lineBreakMode:(UILineBreakMode)lineBreakMode
-         alignment:(UITextAlignment)alignment {
-    [self.title drawInRect:rect withFont:font lineBreakMode:lineBreakMode alignment:alignment];
+- (void)drawAtPoint:(CGPoint)point withWidth:(CGFloat)width font:(UIFont *)font {
+    NSAssert(nil == self.title || nil == self.image, @"Current version supports either only title or image.");
+
+    if (nil != self.title) {
+        CGRect labelRect = CGRectMake(point.x, point.y, width, font.pointSize);
+        [self.title drawInRect:labelRect withFont:font lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
+    }
+    else {
+        CGPoint imageOrigin = CGPointMake(point.x + (width - self.image.size.width) / 2.0f, point.y);
+        [self.image drawAtPoint:imageOrigin];
+    }
 }
 
 @end

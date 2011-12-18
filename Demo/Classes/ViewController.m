@@ -82,12 +82,39 @@
 	[yellowRC release];
 	
 	yellowRC.center = CGPointMake(160, 370);
+    
+    
+    // 5th CONTROL
 	
+    NSArray *iconImages = [NSArray arrayWithObjects:[UIImage imageNamed:@"Footprint"], [UIImage imageNamed:@"Heart"], nil];
+    NSArray *highlightedIconImages = [NSArray arrayWithObjects:[UIImage imageNamed:@"FootprintHighlighted"], [UIImage imageNamed:@"HeartHighlighted"], nil];
+    SVSegmentedControl *imageSC1 = [[SVSegmentedControl alloc] initWithSectionImages:iconImages highlightedImages:highlightedIconImages];
+    [imageSC1 addTarget:self action:@selector(segmentedControlChangedValue:) forControlEvents:UIControlEventValueChanged];
+    
+	[self.view addSubview:imageSC1];
+	[imageSC1 release];
+	
+	imageSC1.center = CGPointMake(100, 420);
+    
+	
+    // 6th CONTROL
+	
+    SVSegmentedControl *imageSC2 = [[SVSegmentedControl alloc] initWithSectionImages:iconImages highlightedImages:highlightedIconImages];
+    [imageSC2 addTarget:self action:@selector(segmentedControlChangedValue:) forControlEvents:UIControlEventValueChanged];
+	imageSC2.crossFadeLabelsOnDrag = YES;
+    
+	[self.view addSubview:imageSC2];
+	[imageSC2 release];
+	
+	imageSC2.center = CGPointMake(220, 420);
+    
 	
 	navSC.tag = 1;
 	redSC.tag = 2;
 	grayRC.tag = 3;
 	yellowRC.tag = 4;
+    imageSC1.tag = 5;
+    imageSC2.tag = 6;
 }
 
 

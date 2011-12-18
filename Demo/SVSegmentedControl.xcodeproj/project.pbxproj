@@ -21,6 +21,14 @@
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		28D7ACF80DDB3853001CB0EB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* ViewController.m */; };
 		98D2FB37149DE4C7001B68F7 /* SVSegmentedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 98D2FB36149DE4C6001B68F7 /* SVSegmentedItem.m */; };
+		98D2FB44149DF281001B68F7 /* Footprint.png in Resources */ = {isa = PBXBuildFile; fileRef = 98D2FB42149DF281001B68F7 /* Footprint.png */; };
+		98D2FB45149DF281001B68F7 /* Footprint@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98D2FB43149DF281001B68F7 /* Footprint@2x.png */; };
+		98D2FB48149DF352001B68F7 /* Heart.png in Resources */ = {isa = PBXBuildFile; fileRef = 98D2FB46149DF352001B68F7 /* Heart.png */; };
+		98D2FB49149DF352001B68F7 /* Heart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98D2FB47149DF352001B68F7 /* Heart@2x.png */; };
+		98E1B850149E239F00CA234F /* FootprintHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 98E1B84C149E239F00CA234F /* FootprintHighlighted.png */; };
+		98E1B851149E239F00CA234F /* FootprintHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98E1B84D149E239F00CA234F /* FootprintHighlighted@2x.png */; };
+		98E1B852149E239F00CA234F /* HeartHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 98E1B84E149E239F00CA234F /* HeartHighlighted.png */; };
+		98E1B853149E239F00CA234F /* HeartHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98E1B84F149E239F00CA234F /* HeartHighlighted@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +54,14 @@
 		8D1107310486CEB800E47090 /* SVSegmentedControl-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SVSegmentedControl-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		98D2FB35149DE4C6001B68F7 /* SVSegmentedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVSegmentedItem.h; sourceTree = "<group>"; };
 		98D2FB36149DE4C6001B68F7 /* SVSegmentedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVSegmentedItem.m; sourceTree = "<group>"; };
+		98D2FB42149DF281001B68F7 /* Footprint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Footprint.png; path = Icons/Footprint.png; sourceTree = "<group>"; };
+		98D2FB43149DF281001B68F7 /* Footprint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Footprint@2x.png"; path = "Icons/Footprint@2x.png"; sourceTree = "<group>"; };
+		98D2FB46149DF352001B68F7 /* Heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Heart.png; path = Icons/Heart.png; sourceTree = "<group>"; };
+		98D2FB47149DF352001B68F7 /* Heart@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Heart@2x.png"; path = "Icons/Heart@2x.png"; sourceTree = "<group>"; };
+		98E1B84C149E239F00CA234F /* FootprintHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = FootprintHighlighted.png; path = Icons/FootprintHighlighted.png; sourceTree = "<group>"; };
+		98E1B84D149E239F00CA234F /* FootprintHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "FootprintHighlighted@2x.png"; path = "Icons/FootprintHighlighted@2x.png"; sourceTree = "<group>"; };
+		98E1B84E149E239F00CA234F /* HeartHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HeartHighlighted.png; path = Icons/HeartHighlighted.png; sourceTree = "<group>"; };
+		98E1B84F149E239F00CA234F /* HeartHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "HeartHighlighted@2x.png"; path = "Icons/HeartHighlighted@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +142,14 @@
 			children = (
 				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* SVSegmentedControl-Info.plist */,
+				98D2FB42149DF281001B68F7 /* Footprint.png */,
+				98D2FB43149DF281001B68F7 /* Footprint@2x.png */,
+				98D2FB46149DF352001B68F7 /* Heart.png */,
+				98D2FB47149DF352001B68F7 /* Heart@2x.png */,
+				98E1B84C149E239F00CA234F /* FootprintHighlighted.png */,
+				98E1B84D149E239F00CA234F /* FootprintHighlighted@2x.png */,
+				98E1B84E149E239F00CA234F /* HeartHighlighted.png */,
+				98E1B84F149E239F00CA234F /* HeartHighlighted@2x.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -194,6 +218,14 @@
 				2899E5220DE3E06400AC0155 /* ViewController.xib in Resources */,
 				228B410A138DE25000DDEC52 /* SVSegmentedControl.bundle in Resources */,
 				224B1756145F25D600BD2DDB /* README.textile in Resources */,
+				98D2FB44149DF281001B68F7 /* Footprint.png in Resources */,
+				98D2FB45149DF281001B68F7 /* Footprint@2x.png in Resources */,
+				98D2FB48149DF352001B68F7 /* Heart.png in Resources */,
+				98D2FB49149DF352001B68F7 /* Heart@2x.png in Resources */,
+				98E1B850149E239F00CA234F /* FootprintHighlighted.png in Resources */,
+				98E1B851149E239F00CA234F /* FootprintHighlighted@2x.png in Resources */,
+				98E1B852149E239F00CA234F /* HeartHighlighted.png in Resources */,
+				98E1B853149E239F00CA234F /* HeartHighlighted@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

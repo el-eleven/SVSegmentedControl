@@ -9,6 +9,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "SVSegmentedControl.h"
+#import "SVSegmentedItem.h"
 
 #define SVSegmentedControlBG [[UIImage imageNamed:@"SVSegmentedControl.bundle/inner-shadow"] stretchableImageWithLeftCapWidth:4 topCapHeight:5]
 
@@ -35,7 +36,7 @@
 - (void)updateTitles;
 - (void)toggle;
 
-@property (nonatomic, retain) NSMutableArray *titlesArray;
+@property (nonatomic, retain) NSMutableArray *itemsArray; // Array of SVSegmentedItems
 @property (nonatomic, retain) NSMutableArray *thumbRects;
 
 @property (nonatomic, readwrite) NSUInteger snapToIndex;
@@ -55,14 +56,14 @@
 
 @synthesize delegate, selectedSegmentChangedHandler, thumbEdgeInset, selectedIndex, animateToInitialSelection;
 @synthesize backgroundImage, font, textColor, shadowColor, shadowOffset, segmentPadding, titleEdgeInsets, height, crossFadeLabelsOnDrag;
-@synthesize titlesArray, thumb, thumbRects, snapToIndex, trackingThumb, moved, activated, halfSize, dragOffset, segmentWidth, thumbHeight;
+@synthesize itemsArray, thumb, thumbRects, snapToIndex, trackingThumb, moved, activated, halfSize, dragOffset, segmentWidth, thumbHeight;
 
 #pragma mark -
 #pragma mark Life Cycle
 
 - (void)dealloc {
 	
-	self.titlesArray = nil;
+	self.itemsArray = nil;
     self.selectedSegmentChangedHandler = nil;
     self.thumbRects = nil;
     
@@ -82,7 +83,11 @@
 - (id)initWithSectionTitles:(NSArray*)array {
     
 	if (self = [super initWithFrame:CGRectZero]) {
-        self.titlesArray = [NSMutableArray arrayWithArray:array];
+        self.itemsArray = [NSMutableArray arrayWithCapacity:[array count]];
+        for (NSString *title in array) {
+            SVSegmentedItem *item = [[[SVSegmentedItem alloc] initWithTitle:title] autorelease];
+            [self.itemsArray addObject:item];
+        }
         self.thumbRects = [NSMutableArray arrayWithCapacity:[array count]];
         
         self.backgroundColor = [UIColor clearColor];
@@ -120,14 +125,14 @@
 	if(newSuperview == nil)
 		return;
 
-	int c = [self.titlesArray count];
+	int c = [self.itemsArray count];
 	int i = 0;
 	
 	self.segmentWidth = 0;
 	
-	for(NSString *titleString in self.titlesArray) {
-		CGFloat stringWidth = [titleString sizeWithFont:self.font].width+(self.titleEdgeInsets.left+self.titleEdgeInsets.right+self.thumbEdgeInset.left+self.thumbEdgeInset.right);
-        self.segmentWidth = MAX(stringWidth, self.segmentWidth);
+	for(SVSegmentedItem *item in self.itemsArray) {
+		CGFloat itemWidth = [item sizeWithFont:self.font].width+(self.titleEdgeInsets.left+self.titleEdgeInsets.right+self.thumbEdgeInset.left+self.thumbEdgeInset.right);
+        self.segmentWidth = MAX(itemWidth, self.segmentWidth);
 	}
 	
 	self.segmentWidth = ceil(self.segmentWidth/2.0)*2; // make it an even number so we can position with center
@@ -136,14 +141,15 @@
     
     i = 0;
     
-	for(NSString *titleString in self.titlesArray) {
+	for(SVSegmentedItem *item in self.itemsArray) {
         [self.thumbRects addObject:[NSValue valueWithCGRect:CGRectMake(self.segmentWidth*i+self.thumbEdgeInset.left, self.thumbEdgeInset.top, self.segmentWidth-(self.thumbEdgeInset.left*2), self.thumbHeight)]];
 		i++;
 	} 
 	
 	self.thumb.frame = [[self.thumbRects objectAtIndex:0] CGRectValue];
 	self.thumb.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.thumb.bounds cornerRadius:2].CGPath;
-	self.thumb.label.text = [self.titlesArray objectAtIndex:0];
+	SVSegmentedItem *firstItem = [self.itemsArray objectAtIndex:0];
+    self.thumb.label.text = firstItem.title;
 	self.thumb.font = self.font;
 	
 	[self insertSubview:self.thumb atIndex:0];
@@ -200,10 +206,10 @@
 	
 	int i = 0;
 	
-	for(NSString *titleString in self.titlesArray) {
+	for(SVSegmentedItem *item in self.itemsArray) {
         CGRect labelRect = CGRectMake((self.segmentWidth*i), posY, self.segmentWidth, self.font.pointSize);
         //CGContextFillRect(context, labelRect);
-		[titleString drawInRect:labelRect withFont:self.font lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
+		[item drawInRect:labelRect withFont:self.font lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
 		i++;
 	}
 }
@@ -270,7 +276,7 @@
 	CGFloat pMaxX = CGRectGetMaxX(self.bounds);
 	CGFloat pMinX = CGRectGetMinX(self.bounds);
 	
-	if(!self.moved && self.trackingThumb && [self.titlesArray count] == 2)
+	if(!self.moved && self.trackingThumb && [self.itemsArray count] == 2)
 		[self toggle];
 	
 	else if(!self.activated && cPos.x > pMinX && cPos.x < pMaxX) {
@@ -315,7 +321,8 @@
 	else
 		index = floor(self.thumb.center.x/self.segmentWidth);
 	
-	self.thumb.label.text = [self.titlesArray objectAtIndex:index];
+    SVSegmentedItem *item = [self.itemsArray objectAtIndex:index];
+	self.thumb.label.text = item.title;
 
 	if(animated)
 		[self moveThumbToIndex:index animate:YES];
@@ -329,14 +336,16 @@
 	BOOL secondTitleOnLeft = ((self.thumb.center.x / self.segmentWidth) - hoverIndex) < 0.5;
 	
 	if (secondTitleOnLeft && hoverIndex > 0) {
+        SVSegmentedItem *previousItem = [self.itemsArray objectAtIndex:hoverIndex - 1];
 		self.thumb.label.alpha = 0.5 + ((self.thumb.center.x / self.segmentWidth) - hoverIndex);
-		self.thumb.secondLabel.text = [self.titlesArray objectAtIndex:hoverIndex - 1];
+		self.thumb.secondLabel.text = previousItem.title;
 		self.thumb.secondLabel.alpha = 0.5 - ((self.thumb.center.x / self.segmentWidth) - hoverIndex);
 	}
 	
-    else if (hoverIndex + 1 < self.titlesArray.count) {
+    else if (hoverIndex + 1 < self.itemsArray.count) {
+        SVSegmentedItem *followingItem = [self.itemsArray objectAtIndex:hoverIndex + 1];
 		self.thumb.label.alpha = 0.5 + (1 - ((self.thumb.center.x / self.segmentWidth) - hoverIndex));
-		self.thumb.secondLabel.text = [self.titlesArray objectAtIndex:hoverIndex + 1];
+		self.thumb.secondLabel.text = followingItem.title;
 		self.thumb.secondLabel.alpha = ((self.thumb.center.x / self.segmentWidth) - hoverIndex) - 0.5;
 	}
 	
@@ -345,14 +354,16 @@
 		self.thumb.label.alpha = 1.0;
 	}
 
-	self.thumb.label.text = [self.titlesArray objectAtIndex:hoverIndex];
+    SVSegmentedItem *item = [self.itemsArray objectAtIndex:hoverIndex];
+	self.thumb.label.text = item.title;
 }
 
 - (void)activate {
 	
 	self.trackingThumb = self.moved = NO;
 	
-	self.thumb.label.text = [self.titlesArray objectAtIndex:self.selectedIndex];
+    SVSegmentedItem *selectedItem = [self.itemsArray objectAtIndex:self.selectedIndex];
+	self.thumb.label.text = selectedItem.title;
     	
 	if(self.selectedSegmentChangedHandler)
 		self.selectedSegmentChangedHandler(self);

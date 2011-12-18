@@ -117,12 +117,17 @@
 	return self;
 }
 
-- (SVSegmentedControl*)initWithSectionImages:(NSArray*)array
+- (SVSegmentedControl*)initWithSectionImages:(NSArray*)array highlightedImages:(NSArray*)highlightedArray;
 {
     if (self = [super initWithFrame:CGRectZero]) {
+        NSAssert([array count] == [highlightedArray count], @"The number of image arrays must be identical.");
         self.itemsArray = [NSMutableArray arrayWithCapacity:[array count]];
-        for (UIImage *image in array) {
-            SVSegmentedItem *item = [[[SVSegmentedItem alloc] initWithImage:image] autorelease];
+        for (NSUInteger index = 0; index < [array count]; index++) {
+            UIImage *image = [array objectAtIndex:index];
+            UIImage *highlightedImage = [highlightedArray objectAtIndex:index];
+            SVSegmentedItem *item = [[[SVSegmentedItem alloc] initWithImage:image 
+                                                           highlightedImage:highlightedImage]
+                                     autorelease];
             [self.itemsArray addObject:item];
         }
         [self initShared];

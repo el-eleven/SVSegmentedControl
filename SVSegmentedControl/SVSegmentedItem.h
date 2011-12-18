@@ -12,9 +12,10 @@
 
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) UIImage *image;
+@property (nonatomic, retain) UIImage *highlightedImage;
 
 - (id)initWithTitle:(NSString *)titleText;
-- (id)initWithImage:(UIImage *)iconImage;
+- (id)initWithImage:(UIImage *)iconImage highlightedImage:(UIImage *)highlightedIconImage;
 - (CGSize)sizeWithFont:(UIFont *)font;
 - (void)drawAtPoint:(CGPoint)point withWidth:(CGFloat)width font:(UIFont *)font;
 

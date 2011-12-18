@@ -10,7 +10,7 @@
 
 @implementation SVSegmentedItem
 
-@synthesize title, image;
+@synthesize title, image, highlightedImage;
 
 - (id)initWithTitle:(NSString *)titleText {
     self = [super init];
@@ -20,10 +20,11 @@
     return self;
 }
 
-- (id)initWithImage:(UIImage *)iconImage {
+- (id)initWithImage:(UIImage *)iconImage highlightedImage:(UIImage *)highlightedIconImage {
     self = [super init];
     if (self) {
         self.image = iconImage;
+        self.highlightedImage = highlightedIconImage;
     }
     return self;
 }

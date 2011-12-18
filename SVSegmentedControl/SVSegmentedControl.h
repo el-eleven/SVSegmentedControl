@@ -35,7 +35,7 @@
 @property (nonatomic, readwrite) BOOL crossFadeLabelsOnDrag; // default is NO
 
 - (SVSegmentedControl*)initWithSectionTitles:(NSArray*)titlesArray;
-- (SVSegmentedControl*)initWithSectionImages:(NSArray*)imagesArray;
+- (SVSegmentedControl*)initWithSectionImages:(NSArray*)imagesArray highlightedImages:(NSArray*)highlightedImagesArray;
 - (void)moveThumbToIndex:(NSUInteger)segmentIndex animate:(BOOL)animate;
 
 @end

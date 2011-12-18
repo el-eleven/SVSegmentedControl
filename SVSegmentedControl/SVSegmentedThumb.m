@@ -84,7 +84,7 @@
         item = [[[SVSegmentedItem alloc] initWithTitle:label.text] autorelease];
     }
     else if (nil != imageView.image) {
-        item = [[[SVSegmentedItem alloc] initWithImage:imageView.image] autorelease];
+        item = [[[SVSegmentedItem alloc] initWithImage:imageView.image highlightedImage:imageView.highlightedImage] autorelease];
     }
     return item;
 }
@@ -94,6 +94,7 @@
     NSAssert(nil == item.title || nil == item.image, @"Current version supports either only title or image.");
     label.text = item.title;
     imageView.image = item.image;
+    imageView.highlightedImage = item.highlightedImage;
 }
 
 - (CGFloat)controlAlpha {
@@ -112,7 +113,7 @@
         item = [[[SVSegmentedItem alloc] initWithTitle:secondLabel.text] autorelease];
     }
     else if (nil != secondImageView.image) {
-        item = [[[SVSegmentedItem alloc] initWithImage:secondImageView.image] autorelease];
+        item = [[[SVSegmentedItem alloc] initWithImage:secondImageView.image highlightedImage:secondImageView.highlightedImage] autorelease];
     }
     return item;
 }
@@ -122,6 +123,7 @@
     NSAssert(nil == item.title || nil == item.image, @"Current version supports either only title or image.");
     secondLabel.text = item.title;
     secondImageView.image = item.image;
+    secondImageView.highlightedImage = item.highlightedImage;
 }
 
 - (CGFloat)secondControlAlpha {
@@ -170,6 +172,7 @@
         imageView.contentMode = UIViewContentModeCenter;
         imageView.backgroundColor = [UIColor clearColor];
         imageView.opaque = NO;
+        imageView.highlighted = YES;
         [self addSubview:imageView];
     }
     
@@ -183,6 +186,7 @@
         secondImageView.contentMode = UIViewContentModeCenter;
         secondImageView.backgroundColor = [UIColor clearColor];
         secondImageView.opaque = NO;
+        secondImageView.highlighted = YES;
         [self addSubview:secondImageView];
     }
     

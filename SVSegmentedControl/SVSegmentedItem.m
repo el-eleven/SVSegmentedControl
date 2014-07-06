@@ -40,7 +40,7 @@
     NSAssert(nil == self.title || nil == self.image, @"Current version supports either only title or image.");
 
     if (nil != self.title) {
-        return [self.title sizeWithFont:font];
+        return [self.title sizeWithAttributes:@{ NSFontAttributeName:font }];
     }
     else {
         return self.image.size;
@@ -52,7 +52,11 @@
 
     if (nil != self.title) {
         CGRect labelRect = CGRectMake(point.x, point.y, width, font.pointSize);
-        [self.title drawInRect:labelRect withFont:font lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
+        NSMutableParagraphStyle *style = [[[NSMutableParagraphStyle alloc] init] autorelease];
+        style.lineBreakMode = NSLineBreakByClipping;
+        style.alignment = NSTextAlignmentCenter;
+        NSDictionary *attributes = @{ NSFontAttributeName:font, NSParagraphStyleAttributeName:style };
+        [self.title drawInRect:labelRect withAttributes:attributes];
     }
     else {
         CGPoint imageOrigin = CGPointMake(point.x + (width - self.image.size.width) / 2.0f, point.y);

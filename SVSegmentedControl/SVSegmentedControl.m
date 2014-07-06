@@ -150,7 +150,6 @@
 		return;
 
 	int c = [self.itemsArray count];
-	int i = 0;
 	
 	self.segmentWidth = 0;
 	
@@ -163,12 +162,9 @@
 	self.bounds = CGRectMake(0, 0, self.segmentWidth*c, self.height);
     self.thumbHeight = self.thumb.backgroundImage ? self.thumb.backgroundImage.size.height : self.height-(self.thumbEdgeInset.top+self.thumbEdgeInset.bottom);
     
-    i = 0;
-    
-	for(SVSegmentedItem *item in self.itemsArray) {
+    for (NSUInteger i = 0; i < self.itemsArray.count; i++) {
         [self.thumbRects addObject:[NSValue valueWithCGRect:CGRectMake(self.segmentWidth*i+self.thumbEdgeInset.left, self.thumbEdgeInset.top, self.segmentWidth-(self.thumbEdgeInset.left*2), self.thumbHeight)]];
-		i++;
-	} 
+	}
 	
 	self.thumb.frame = [[self.thumbRects objectAtIndex:0] CGRectValue];
 	self.thumb.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.thumb.bounds cornerRadius:2].CGPath;

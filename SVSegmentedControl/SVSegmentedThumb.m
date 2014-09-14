@@ -93,8 +93,7 @@
 {
     NSAssert(nil == item.title || nil == item.image, @"Current version supports either only title or image.");
     label.text = item.title;
-    imageView.image = item.image;
-    imageView.highlightedImage = item.highlightedImage;
+    imageView.image = item.highlightedImage; // To avoid a bug that a highlighted image is not properly used by highlightedImage property. An image previously set is displayed in iOS 8.
 }
 
 - (CGFloat)controlAlpha {
@@ -122,8 +121,7 @@
 {
     NSAssert(nil == item.title || nil == item.image, @"Current version supports either only title or image.");
     secondLabel.text = item.title;
-    secondImageView.image = item.image;
-    secondImageView.highlightedImage = item.highlightedImage;
+    secondImageView.image = item.highlightedImage; // To avoid a bug that a highlighted image is not properly used by highlightedImage property. An image previously set is displayed in iOS 8.
 }
 
 - (CGFloat)secondControlAlpha {
@@ -172,7 +170,7 @@
         imageView.contentMode = UIViewContentModeCenter;
         imageView.backgroundColor = [UIColor clearColor];
         imageView.opaque = NO;
-        imageView.highlighted = YES;
+        imageView.highlighted = NO; // To avoid a bug that a highlighted image is not properly used by highlightedImage property. An image previously set is displayed in iOS 8.
         [self addSubview:imageView];
     }
     
@@ -186,7 +184,7 @@
         secondImageView.contentMode = UIViewContentModeCenter;
         secondImageView.backgroundColor = [UIColor clearColor];
         secondImageView.opaque = NO;
-        secondImageView.highlighted = YES;
+        secondImageView.highlighted = NO; // To avoid a bug that a highlighted image is not properly used by highlightedImage property. An image previously set is displayed in iOS 8.
         [self addSubview:secondImageView];
     }
     

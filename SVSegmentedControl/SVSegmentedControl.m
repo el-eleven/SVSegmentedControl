@@ -149,7 +149,7 @@
 	if(newSuperview == nil)
 		return;
 
-	int c = [self.itemsArray count];
+	NSUInteger c = [self.itemsArray count];
 	
 	self.segmentWidth = 0;
 	
@@ -333,7 +333,7 @@
     if(self.crossFadeLabelsOnDrag)
         self.thumb.secondControlAlpha = 0;
 
-	int index;
+	NSUInteger index;
 	
 	if(self.snapToIndex != -1)
 		index = self.snapToIndex;
